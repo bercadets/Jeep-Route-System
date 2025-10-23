@@ -11,7 +11,7 @@
 
   <style>
     body {
-      margin: 1;
+      margin: 0;
       padding: 0;
     }
     #map {
@@ -22,67 +22,21 @@
 </head>
 <body>
 
+  <div id="controls">
+  <input type="text" id="locationInput" placeholder="Enter a location" />
+  <button id="searchBtn">Search</button>
+</div>
+<div id="map"></div>
+
+
   <div id="map"></div>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
-  <script>
-    // Coordinates for your route
-    const waypoints = [
-      L.latLng(13.79044, 121.06232),
-      L.latLng(13.79214, 121.07015),
-      L.latLng(13.78661, 121.06915),
-      L.latLng(13.77040, 121.06519),
-      L.latLng(13.76413, 121.05889),
-      L.latLng(13.76002, 121.05755),
-      L.latLng(13.75819, 121.05699),
-      L.latLng(13.75065, 121.05684),
-      L.latLng(13.75251, 121.05203),
-      L.latLng(13.75733, 121.05464),
-      L.latLng(13.75830, 121.06304),
-      L.latLng(13.76998, 121.06550),
-      L.latLng(13.79214, 121.07015),
-      L.latLng(13.79044, 121.06232)
-    ];
-
-    // Initialize map (no fixed starting position)
-    const map = L.map('map');
-
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Try to locate user and center map
-    map.locate({ setView: true, maxZoom: 16 });
-
-    // When location is found
-    map.on('locationfound', (e) => {
-      // Add a marker for user location
-      L.marker(e.latlng)
-        .addTo(map)
-        .bindPopup("📍 You are here!")
-        .openPopup();
-    });
-
-    // If location cannot be found (e.g., permission denied)
-    map.on('locationerror', (e) => {
-      alert("Unable to access your location. Showing default route only.");
-      map.setView([13.75560, 121.07066], 14); // fallback view (SM Batangas)
-    });
-
-    // Add your route
-    L.Routing.control({
-      waypoints: waypoints,
-      routeWhileDragging: true,
-      lineOptions: {
-        styles: [{ color: 'red', weight: 3 }]
-      }
-    }).addTo(map);
-  </script>
+  <!-- Your custom JavaScript -->
+  <script src="jeep.js"></script>
 
 </body>
 </html>
