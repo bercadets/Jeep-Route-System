@@ -22,4 +22,5 @@ This project was created to address the lack of digital tools for public jeepney
 - 🧮 **Distance Estimation** – Uses coordinate data or preset values to estimate travel distance.  
 - 🖥️ **User Interface** – Clean and simple UI for easy use by commuters and admins alike.
 
+<img width="500" height="500" alt="image-removebg-preview (1)" src="https://github.com/user-attachments/assets/df5b1f0f-248b-4717-aa9f-d10e3069baf1" />
 
