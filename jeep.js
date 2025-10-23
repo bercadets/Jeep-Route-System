@@ -13,6 +13,11 @@ const jeepneyRoutes = [
       [13.75819, 121.05699],
       [13.75065, 121.05684],
       [13.75251, 121.05203],
+      [13.75548, 121.05309],
+      [13.75741, 121.05544],
+      [13.75832, 121.06306],
+      [13.77050, 121.06555],
+      [13.79044, 121.06232]
     ]
   },
   {
@@ -31,8 +36,9 @@ const jeepneyRoutes = [
     color: "red",
     waypoints: [
       [13.79822, 121.07121],
-      [13.79079, 121.06122],
       [13.76266, 121.05738],
+      [13.77105, 121.05096],
+      [13.79079, 121.06122]
     ]
   }
 ];
@@ -76,7 +82,7 @@ function drawRoutes(routesToDraw) {
   });
 }
 
-// --- Helper: distance calculator ---
+// --- Helper: distance calculator (still used for nearest route) ---
 function getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {
   const R = 6371000;
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -114,14 +120,13 @@ searchBtn.addEventListener("click", async () => {
     L.marker([lat, lng]).addTo(map).bindPopup("🔍 " + query).openPopup();
     map.setView([lat, lng], 15);
 
-    // --- Find jeep routes that pass near searched location ---
-    let matchingRoutes = jeepneyRoutes.filter(route =>
-      route.waypoints.some(([wpLat, wpLng], i) => {
-        if (i === route.waypoints.length - 1) return false;
-        const distance = getDistanceFromLatLonInMeters(lat, lng, wpLat, wpLng);
-        return distance <= 200; // within 200m of any stop
-      })
-    );
+    // --- Find jeep routes that pass near searched location (using Turf.js) ---
+    let matchingRoutes = jeepneyRoutes.filter(route => {
+      const line = turf.lineString(route.waypoints.map(([lat, lng]) => [lng, lat]));
+      const point = turf.point([lng, lat]);
+      const distance = turf.pointToLineDistance(point, line, { units: "meters" });
+      return distance <= 200; // passes within 200m
+    });
 
     // --- If none pass by, find the nearest route to user's location ---
     if (matchingRoutes.length === 0 && userLocation) {
@@ -146,6 +151,7 @@ searchBtn.addEventListener("click", async () => {
       if (nearestRoute) matchingRoutes = [nearestRoute];
     }
 
+    // Draw routes found
     drawRoutes(matchingRoutes);
   } catch (err) {
     console.error(err);
